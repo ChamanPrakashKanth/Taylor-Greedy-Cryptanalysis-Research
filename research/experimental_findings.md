@@ -20,6 +20,48 @@ For the archived dense SAT implementation, building the cubic coefficient array 
 
 ## Limits and follow-up
 
-The scripts use a candidate-score cap of 5,000. Restart evaluations and validation computations are not accounted for uniformly by the original methods, and WalkSAT scans clauses. Elapsed time is descriptive. Repeated starts on an archived instance are correlated. Equal wall-clock comparisons, confidence intervals, allocation and operation counts, controlled ablations, learned selectors, other optimization families, and cryptographic experiments are outside the completed evidence. There is no measured key-recovery result or basis for a conclusion about encryption or complexity classes.
+The scripts use a candidate-score cap of 5,000. Restart evaluations and validation computations are not accounted for uniformly by the original methods, and WalkSAT scans clauses. Elapsed time is descriptive. Repeated starts on an archived instance are correlated. Equal wall-clock comparisons, confidence intervals, allocation and operation counts, controlled ablations, learned selectors, and additional optimization families are outside the completed evidence. The separate extension below reports a classroom cipher experiment.
 
 A follow-up should compare fixed and adaptive order with the same variable subset, use matched wall-clock budgets, and report paired intervals by independent instance.
+
+## Additional experiments
+
+### Binary quadratics
+
+Dense and sparse random symmetric integer matrices, sizes 8, 12, and 16, with twelve draws per size and density. Exhaustive enumeration certified each minimum of xᵀQx. Direct recomputation checked second-order displacement formulas on one-, two-, and three-bit moves. The tables count candidate scores under the implemented policies, including restart draws. The annealing baseline scores one selected flip per step. The current code builds all single-flip deltas on each annealing step, so candidate counts alone understate its arithmetic costs.
+
+| Method | Exact minima |
+|---|---:|
+| Greedy with restarts | 72/72 |
+| Taylor-2 with restarts | 72/72 |
+| Simulated annealing | 70/72 |
+
+### Continuous objectives
+
+Each method had up to 600 direct objective evaluations on the same starts. Taylor coordinate search evaluated four candidate displacements per coordinate using its local model, directly scored the best prediction, and reduced the search radius after rejection. Powell used SciPy 1.10.1. Both functions have optimum zero and the hit threshold was 1e-8.
+
+| Method | Sphere hits | Rastrigin hits | Median Rastrigin gap |
+|---|---:|---:|---:|
+| Powell | 36/36 | 36/36 | 6.64e-28 |
+| Taylor-1 | 36/36 | 0/36 | 86.06 |
+| Taylor-2 | 36/36 | 0/36 | 89.55 |
+| Taylor-3 | 36/36 | 0/36 | 93.03 |
+
+Both functions are separable. These scores characterize the tested coordinate policy and do not measure performance on coupled engineering objectives.
+
+### Classroom cipher
+
+A custom substitution and rotation construction used synthetic 8-, 12-, and 16-bit keys and 2, 4, or 8 rounds. The objective counted ciphertext disagreements across four messages. A candidate with zero disagreements was checked on four distinct holdout messages. Exhaustive enumeration established the reference sets. Heuristics were capped at the smaller of 1,024 evaluations and the keyspace size.
+
+| Method | Found a holdout-valid match |
+|---|---:|
+| Exhaustive reference | 27/27 |
+| Uniform random without replacement | 13/27 |
+| Restarted single-flip greedy | 8/27 |
+| Restarted single/pair greedy | 8/27 |
+
+The pair search scores actual neighbors and serves as a neighborhood baseline. These results apply to this classroom construction. The raw table distinguishes holdout-valid matches from recovery of the particular planted key.
+
+### Outstanding work
+
+The study has 2,012 completed solver trials across five batches. The requested verified unsatisfiable and additional SAT generators, larger instances, independent Ising and engineering workloads, learned selector, ablations, uncertainty intervals, matched wall-clock runs and standard-cipher seed recovery were not completed.

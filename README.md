@@ -10,6 +10,9 @@ python3 -m unittest discover -s tests
 python3 benchmarks/taylor_greedy_followup.py
 python3 benchmarks/taylor_greedy_walksat_control.py
 python3 benchmarks/benchmark_adaptive.py
+python3 benchmarks/benchmark_qubo.py
+python3 benchmarks/benchmark_continuous.py
+python3 benchmarks/benchmark_toy.py
 python3 benchmarks/summarize.py
 ```
 
